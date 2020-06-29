@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
-from profile_page.models import profile_details,educations,skills
+from profile_page.models import profile_details,educations,skills,educations
 from django.http import HttpResponse
 
 import json
