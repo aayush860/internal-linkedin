@@ -1,0 +1,1088 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Personal Bootstrap Template</title>
+  <meta content="" name="descriptison">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'ProfilePage/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'ProfilePage/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'ProfilePage/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'ProfilePage/assets/vendor/icofont/icofont.min.css' %}" rel="stylesheet">
+  <link href="{% static 'ProfilePage/assets/vendor/remixicon/remixicon.css' %}" rel="stylesheet">
+  <link href="{% static 'ProfilePage/assets/vendor/owl.carousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+  <link href="{% static 'ProfilePage/assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'ProfilePage/assets/vendor/venobox/venobox.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'ProfilePage/assets/css/style.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Personal - v2.3.0
+  * Template URL: https://bootstrapmade.com/personal-free-resume-bootstrap-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"> </script>
+  <!-- jQuery UI !-->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+
+  <form method="post" action="/search/" class="autocomplete-me">
+    <input type="text" id="id_q" name="q">
+    <input type="submit" value="Search!">
+    <a href="/logout">Logout</a>
+      </form>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script type="text/javascript">
+    // In a perfect world, this would be its own library file that got included
+    // on the page and only the ``$(document).ready(...)`` below would be present.
+    // But this is an example.
+    var Autocomplete = function(options) {
+      this.form_selector = options.form_selector
+      this.url = options.url || '/search/'
+      this.delay = parseInt(options.delay || 300)
+      this.minimum_length = parseInt(options.minimum_length || 3)
+      this.form_elem = null
+      this.query_box = null
+    }
+
+    Autocomplete.prototype.setup = function() {
+      var self = this
+
+      this.form_elem = $(this.form_selector)
+      this.query_box = this.form_elem.find('input[name=q]')
+
+      // Watch the input box.
+      this.query_box.on('keyup', function() {
+        var query = self.query_box.val()
+
+        if(query.length < self.minimum_length) {
+          return false
+        }
+
+        self.fetch(query)
+      })
+
+      // On selecting a result, populate the search field.
+      this.form_elem.on('click', '.ac-result', function(ev) {
+        self.query_box.val($(this).text())
+        location.replace('/profile/'+$(this).val())
+        $('.ac-result').remove()
+        return false
+      })
+    }
+
+    Autocomplete.prototype.fetch = function(query) {
+      var self = this
+
+      $.ajax({
+        url: this.url
+      , data: {
+          'q': query
+        }
+      , success: function(data) {
+          self.show_results(data)
+        }
+      })
+    }
+
+    Autocomplete.prototype.show_results = function(data) {
+      // Remove any existing results.
+      $('.ac-results').remove()
+
+      var results = data.results || []
+      var username = data.username || []
+      var results_wrapper = $('<div class="ac-results"></div>')
+      var results_wrapper2 = $('<div class="ac-results"></div>')
+      var base_elem = $('<div class="result-wrapper"><a href="#" class="ac-result"></a></div>')
+
+      if(results.length > 0) {
+        for(var res_offset in results) {
+          var elem = base_elem.clone()
+          // Don't use .html(...) here, as you open yourself to XSS.
+          // Really, you should use some form of templating.
+          //elem.find('.ac-result').data('name',results[res_offset])
+          elem.find('.ac-result').text(results[res_offset])
+          elem.find('.ac-result').val(username[res_offset])
+          results_wrapper.append(elem)
+        }
+      }
+      else {
+        var elem = base_elem.clone()
+        elem.text("No results found.")
+        results_wrapper.append(elem)
+      }
+
+      this.query_box.after(results_wrapper)
+    }
+
+    $(document).ready(function() {
+      window.autocomplete = new Autocomplete({
+        form_selector: '.autocomplete-me'
+      })
+      window.autocomplete.setup()
+    })
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header-tops">
+
+  
+    <div class="container">
+      {% if user.is_authenticated %}
+      <h1>{{login_det.first_name}}</h1>
+      {% else %}
+      <h1>Aayush Bhargava</h1>
+      {% endif %}
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html" class="mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a> -->
+      <div class="det">
+        <form action="update_home/">
+          <label for="About_me_Homex">{{dataa.About_me_Home}}</label><br>
+          <input itype="text" id="About_me_Home" name="About_me_Home" placeholder={{dataa.About_me_Home}}>
+          <button type="submit", button type="submit", formmethod="POST">
+            {% csrf_token %}
+            Save
+          </button>
+          <script>
+            var link = document.getElementById('About_me_Home'); 
+            link.placeholder = "{{dataa.About_me_Home}}";
+          </script>
+        </form>
+          
+        <form action="update_social/">
+          <br><br><label for="github">Github Link: </label>
+          <input itype="text" id="github" name="github" placeholder={{social.github}}>
+
+          <br><label for="facebook">Facebook Link: </label>
+          <input itype="text" id="facebook" name="facebook" placeholder={{social.facebook}}>
+
+          <br><label for="instagram">Instagram Link: </label>
+          <input itype="text" id="instagram" name="instagram" placeholder={{social.instagram}}>
+
+          <br><label for="linkedin">Linkedin Link: </label>
+          <input itype="text" id="linkedin" name="linkedin" placeholder={{social.linkedin}}><br>
+
+          <button type="submit", button type="submit", formmethod="POST">
+            {% csrf_token %}
+            Save
+          </button>
+        </form>
+
+      </div>
+      
+      <nav id="nav-wrap" class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="#header">Home</a></li>
+          <li><a href="#about" class="about">About</a></li>
+          <li><a href="#resume" class="resume">Resume</a></li>
+          <li><a href="#services" class="services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+
+      <div class="social-links">
+        <a href="#" class="github"><i class="icofont-github"></i></a>
+        <a href="#" class="facebook"><i class="icofont-facebook"></i></a>
+        <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
+        <a href="#" class="linkedin"><i class="icofont-linkedin"></i></a>
+      </div>
+
+    </div>
+  </header><!-- End Header -->
+
+
+  
+
+
+  <!-- ======= About Section ======= -->
+  <section id="about" class="about">
+    <!-- ======= About Me ======= -->
+    <div id="herex" class="about-me container">
+
+      <div class="section-title">
+        <h2>About</h2>
+        <p>Learn more about me</p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-4" data-aos="fade-right">
+          <img src="{% static 'ProfilePage/assets/img/me.jpg' %}" class="img-fluid" alt="">
+        </div>
+        <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
+          <form action="update_about/">
+            
+            <h3>​<input itype="text" id="Job_Title" name="Job_Title" value={{about_det.Job_Title}}></h3>
+            <p class="font-italic">
+                <textarea id="Job_details" name="Job_details" rows="3" cols="50">{{about_det.Job_details}}</textarea>
+            </p>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <ul>
+                  <li><i class="icofont-rounded-right"></i> <strong>Birthday:&ensp;</strong> <input itype="text" id="Birthday" name="Birthday" value={{about_det.Birthday}}> </li>
+                  <li><i class="icofont-rounded-right"></i> <strong>Website:&ensp;</strong> <input itype="text" id="Website" name="Website" value={{about_det.Website}}> </li>
+                  <li><i class="icofont-rounded-right"></i> <strong>Phone:&ensp;&ensp;&ensp;</strong> <input itype="text" id="MobileNumber" name="MobileNumber" value={{about_det.MobileNumber}}> </li>
+                  <li><i class="icofont-rounded-right"></i> <strong>City:&ensp;&ensp;&ensp;&ensp;&ensp;</strong> <input itype="text" id="City" name="City" value={{about_det.City}}> </li>
+                  
+                </ul>
+              </div>
+              <div class="col-lg-6">
+                <ul>
+                  <li><i class="icofont-rounded-right"></i> <strong>Age:&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;</strong> <input itype="text" id="Age" name="Age" value={{about_det.Age}}> </li>
+                  <li><i class="icofont-rounded-right"></i> <strong>Degree:&ensp;&ensp;&ensp;</strong> <input itype="text" id="Degree" name="Degree" value={{about_det.Degree}}> </li>
+                  <li><i class="icofont-rounded-right"></i> <strong>Freelance:</strong> <input itype="text" id="Freelance" name="Freelance" value={{about_det.Freelance}}> </li>
+                </ul>
+              </div>
+            </div>
+            <p>
+                <textarea id="About_me_About" name="About_me_About" rows="3" cols="50">{{about_det.About_me_About}}</textarea>
+            </p>
+            <button type="submit", button type="submit", formmethod="POST">
+                {% csrf_token %}
+                Save
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+    </div><!-- End About Me -->
+
+
+
+    <!-- ======= Skills  ======= -->
+    <div class="skills container">
+
+      <div class="section-title">
+        <h2>Skills</h2>
+      </div>
+
+
+      <div class="row skills-content">
+        <div class="col-lg-6">
+          {% for i in skilx %}
+          <div class="progress">
+             <span class="skill">{{i.skill_name}} <i class="val">{{i.skill_profeciency}}%</i></span>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar" role="progressbar" aria-valuenow={{i.skill_profeciency}} aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+          {% endfor %}
+
+          <div id='TextBoxesGroup'>
+            <h3>Add</h3> 
+            <input type='button' value='Add Button' id='addButton'>
+            <input type='button' value='Remove Button' id='removeButton'>
+            <input type='button' value='Get TextBox Value' id='getButtonValue'>
+          </div>
+
+        </div>
+
+      </div>
+
+      <script type="text/javascript">
+
+        $(document).ready(function(){
+      
+            var counter = 2;
+            $("#addButton").click(function () {
+      
+          if(counter>10){
+                    alert("Only 10 textboxes allow");
+                    return false;
+          }
+          
+          var newTextBoxDiv = $(document.createElement('div'))
+              .attr("id", 'TextBoxDiv' + counter);
+      
+          
+          newTextBoxDiv.after().html(
+            '<label>Name of the skill : </label>' +
+          '<input type="text" name="skill_name' + counter +
+          '" id="skill_name' + counter + '" value="" ><br>'+
+          
+          '<label>Skill Profeciency : </label>' +
+          '<input type="text" name="skill_prof' + counter +
+          '" id="skill_prof' + counter + '" value="" >');
+      
+          newTextBoxDiv.appendTo("#TextBoxesGroup");
+      
+          counter++;
+            });
+      
+            $("#removeButton").click(function () {
+          if(counter==1){
+                  alert("No more textbox to remove");
+                  return false;
+              }
+      
+          counter--;
+      
+                $("#TextBoxDiv" + counter).remove();
+      
+            });
+      
+          $("#getButtonValue").click(function () {
+      
+          var msg = [];
+          for(i=1; i<counter; i++){
+            msg[i]=([$('#skill_name' + (i)).val(), $('#skill_prof' + (i)).val()])
+          }
+      
+      
+          var payload = JSON.stringify({data : msg});
+          $.ajax({
+          url : "/edit_info/update_skills/",
+          type: "POST",
+          headers: {'X-CSRFToken': '{{ csrf_token }}'},
+          data : {'payload': payload},
+          dataType : "application/json",}).done(function(response) {
+            console.log(response.id + " " + response.name);
+          }).fail(function (error) {
+              console.log(error);
+          });
+          
+          location.replace("#about");
+          location.reload()
+          //$('body').load('/edit_info/#about',function refreshTable(){
+       //setTimeout(refreshTable, 5000);
+    //});
+
+      //    window.location.href = '#about'
+      //    console.info(msg);
+      //    alert(msg);
+            });
+          });
+        </script>
+
+    </div><!-- End Skills -->
+
+    <!-- ======= Interests ======= -->
+    <div class="interests container">
+
+      <div class="section-title">
+        <h2>Interests</h2>
+      </div>
+
+      <div class="row">
+        {% for i in interest %}
+          <div class="col-lg-3 col-md-4 mt-4">
+            <div class="icon-box">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                width="44" height="44"
+                viewBox="0 0 172 172"
+                style=" fill:#000000;"><defs><linearGradient x1="86" y1="18.14063" x2="86" y2="154.55812" gradientUnits="userSpaceOnUse" id="color-1_43602_gr1"><stop offset="0" stop-color="#1a6dff"></stop><stop offset="1" stop-color="#c822ff"></stop></linearGradient><linearGradient x1="86" y1="18.14063" x2="86" y2="154.55812" gradientUnits="userSpaceOnUse" id="color-2_43602_gr2"><stop offset="0" stop-color="#1a6dff"></stop><stop offset="1" stop-color="#c822ff"></stop></linearGradient><linearGradient x1="59.125" y1="100.10938" x2="59.125" y2="126.62156" gradientUnits="userSpaceOnUse" id="color-3_43602_gr3"><stop offset="0" stop-color="#8ab4ff"></stop><stop offset="1" stop-color="#e492ff"></stop></linearGradient></defs><g transform=""><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="" fill="none"></path><path d="" fill="none"></path><path d="" fill="none"></path><g><path d="M139.75,153.1875h-107.5c-7.40944,0 -13.4375,-6.02806 -13.4375,-13.4375v-107.5c0,-7.40944 6.02806,-13.4375 13.4375,-13.4375h107.5c7.40944,0 13.4375,6.02806 13.4375,13.4375v107.5c0,7.40944 -6.02806,13.4375 -13.4375,13.4375zM32.25,24.1875c-4.44513,0 -8.0625,3.61737 -8.0625,8.0625v107.5c0,4.44512 3.61737,8.0625 8.0625,8.0625h107.5c4.44512,0 8.0625,-3.61738 8.0625,-8.0625v-107.5c0,-4.44513 -3.61738,-8.0625 -8.0625,-8.0625z" fill="url(#color-1_43602_gr1)"></path><path d="M129,137.0625h-86c-4.44512,0 -8.0625,-3.61738 -8.0625,-8.0625v-86c0,-4.44512 3.61738,-8.0625 8.0625,-8.0625h86c4.44512,0 8.0625,3.61738 8.0625,8.0625v3.81087l-51.07594,50.38794l-21.156,-21.156l-7.60025,7.5895l26.84813,26.31331c0.50525,0.50525 1.17981,0.24188 1.89737,0.24188c0.00269,0 0.00538,0 0.00806,0c0.72294,0 1.3975,0.26069 1.90275,-0.25263l49.17587,-49.29681v68.36194c0,4.44513 -3.61737,8.0625 -8.0625,8.0625zM43,40.3125c-1.4835,0 -2.6875,1.204 -2.6875,2.6875v86c0,1.4835 1.204,2.6875 2.6875,2.6875h86c1.4835,0 2.6875,-1.204 2.6875,-2.6875v-55.26037l-39.97656,39.97387c-1.52113,1.53994 -3.5475,1.849 -5.71094,1.849c-0.00806,0 -0.01613,0 -0.02419,0c-2.15269,0 -4.17638,-0.29294 -5.6975,-1.81675l-26.84812,-26.57669c-2.09894,-2.09625 -2.09894,-5.375 0,-7.47394l7.5895,-7.52231c2.09894,-2.09894 5.51206,-2.06669 7.611,0.03494l17.38275,17.39888l45.67406,-45.0425v-1.56413c0,-1.4835 -1.204,-2.6875 -2.6875,-2.6875z" fill="url(#color-2_43602_gr2)"></path><path d="M72.5625,126.3125h-24.1875c-1.4835,0 -2.6875,-1.204 -2.6875,-2.6875v-24.1875z" fill="url(#color-3_43602_gr3)"></path></g></g></g></svg>
+              <h3>{{ i.interest }}</h3>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div id='TextBoxesGroupint'>
+        <h3>Add</h3> 
+        <input type='button' value='Add Button' id='addButtonint'>
+        <input type='button' value='Remove Button' id='removeButtonint'>
+        <input type='button' value='Get TextBox Value' id='getButtonValueint'>
+      </div>
+
+
+      <script type="text/javascript">
+
+        $(document).ready(function(){
+      
+            var counter = 2;
+            $("#addButtonint").click(function () {
+      
+          if(counter>10){
+                    alert("Only 10 textboxes allow");
+                    return false;
+          }
+          
+          var newTextBoxDiv = $(document.createElement('div'))
+              .attr("id", 'TextBoxDiv' + counter);
+      
+          
+          newTextBoxDiv.after().html(
+            '<label>Hobby : </label>' +
+          '<input type="text" name="interest' + counter +
+          '" id="interest' + counter + '" value="" ><br>');
+      
+          newTextBoxDiv.appendTo("#TextBoxesGroupint");
+      
+          counter++;
+            });
+      
+            $("#removeButtonint").click(function () {
+          if(counter==1){
+                  alert("No more textbox to remove");
+                  return false;
+              }
+      
+          counter--;
+      
+                $("#TextBoxDiv" + counter).remove();
+      
+            });
+      
+          $("#getButtonValueint").click(function () {
+      
+          var msg = [];
+          for(i=1; i<counter; i++){
+            msg[i]=([$('#interest' + (i)).val()])
+          }
+      
+      
+          var payload = JSON.stringify({data : msg});
+          $.ajax({
+          url : "/edit_info/update_interest/",
+          type: "POST",
+          headers: {'X-CSRFToken': '{{ csrf_token }}'},
+          data : {'payload': payload},
+          dataType : "application/json",}).done(function(response) {
+            console.log(response.id + " " + response.name);
+          }).fail(function (error) {
+              console.log(error);
+          });
+          
+          location.replace("#about");
+          location.reload()
+          //$('body').load('/edit_info/#about',function refreshTable(){
+       //setTimeout(refreshTable, 5000);
+    //});
+
+      //    window.location.href = '#about'
+      //    console.info(msg);
+      //    alert(msg);
+            });
+          });
+        </script>
+
+    </div><!-- End Interests -->
+
+  </section><!-- End About Section -->
+
+  <!-- ======= Resume Section ======= -->
+  <section id="resume" class="resume">
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Resume</h2>
+        <p>Check My Resume</p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6">
+
+          <h3 class="resume-title">Education</h3>
+          {% for educ in educationn%}
+          <form id={{forloop.counter}} action="update_education/">
+            <div class="resume-item">
+              <h4><input itype="text" id="degree_name{{forloop.counter}}" name="degree_name" value={{educ.degree_name}}></h4>
+              <h5><input itype="text" id="year_of_education" name="year_of_education" value={{educ.year_of_education}}></h5>
+              <p><em><input itype="text" id="institute_name" name="institute_name" value={{educ.institute_name}}></em></p>
+              <p><input itype="text" id="about_education" name="about_education" value={{educ.about_education}}></p>
+            </div>
+            <button id={{educ.id}} name=id value={{educ.id}} type="submit" formmethod="POST">
+                {% csrf_token %}
+                Save
+            </button>
+          </form>
+          {% endfor %}
+
+          <div class="resume-item">
+            <h4>Bachelor of Fine Arts &amp; Graphic Design</h4>
+            <h5>2010 - 2014</h5>
+            <p><em>Rochester Institute of Technology, Rochester, NY</em></p>
+            <p>Quia nobis sequi est occaecati aut. Repudiandae et iusto quae reiciendis et quis Eius vel ratione eius unde vitae rerum voluptates asperiores voluptatem Earum molestiae consequatur neque etlon sader mart dila</p>
+          </div>
+
+
+          <div id='TextBoxesGroupeduc'>
+            <h3>Add</h3> 
+            <input type='button' value='Add Button' id='addButtoneduc'>
+            <input type='button' value='Remove Button' id='removeButtoneduc'>
+            <input type='button' value='Get TextBox Value' id='getButtonValueeduc'>
+          </div>
+
+          <script type="text/javascript">
+
+            $(document).ready(function(){
+          
+                var counter = 2;
+                $("#addButtoneduc").click(function () {
+          
+              if(counter>10){
+                        alert("Only 10 textboxes allow");
+                        return false;
+              }
+              
+              var newTextBoxDiv = $(document.createElement('div'))
+                  .attr("id", 'TextBoxDiv' + counter);
+          
+              
+              newTextBoxDiv.after().html(
+                '<label>Degree : </label><br>' +
+              '<input type="text" name="degree_name' + counter +
+              '" id="degree_name' + counter + '" value="" ><br>'+
+              
+              '<label>Year : </label><br>' +
+              '<input type="text" name="year_of_education' + counter +
+              '" id="year_of_education' + counter + '" value="" ><br>'+
+              
+              '<label>Institute Name : </label><br>' +
+              '<input type="text" name="institute_name' + counter +
+              '" id="institute_name' + counter + '" value="" ><br>'+
+
+              '<label>About Education : </label><br>' +
+              '<textarea rows="3" cols="50" name="about_education' + counter +
+              '" id="about_education' + counter + '" value="" ></textarea><br>'
+
+              );
+              newTextBoxDiv.appendTo("#TextBoxesGroupeduc");
+          
+              counter++;
+                });
+          
+                $("#removeButtoneduc").click(function () {
+              if(counter==1){
+                      alert("No more textbox to remove");
+                      return false;
+                  }
+          
+              counter--;
+          
+                    $("#TextBoxDiv" + counter).remove();
+          
+                });
+          
+              $("#getButtonValueeduc").click(function () {
+          
+              var msg = [];
+              for(i=1; i<counter; i++){
+                msg[i]=([$('#degree_name' + (i)).val(), $('#year_of_education' + (i)).val(), $('#institute_name' + (i)).val(), $('#about_education' + (i)).val()])
+              }
+          
+          
+              var payload = JSON.stringify({data : msg});
+              $.ajax({
+              url : "/edit_info/update_education/",
+              type: "POST",
+              headers: {'X-CSRFToken': '{{ csrf_token }}'},
+              data : {'payload': payload},
+              dataType : "application/json",}).done(function(response) {
+                console.log(response.id + " " + response.name);
+              }).fail(function (error) {
+                  console.log(error);
+              });
+              alert("Saved")
+              location.replace("#resume")
+              location.reload()
+              
+              console.info(msg);
+             
+                });
+              });
+            </script>
+
+
+        </div>
+        
+        <div class="col-lg-6">
+          <h3 class="resume-title">Professional Experience</h3>
+
+          {% for profx in professional%}
+          <form id={{forloop.counter}} action="update_profession/">
+            <div class="resume-item">
+              <h4><input itype="text" id="designation" name="designation" value={{profx.designation}}></h4>
+              <h5><input itype="text" id="year_of_work" name="year_of_work" value={{profx.year_of_work}}></h5>
+              <p><em><input itype="text" id="company_name" name="company_name" value={{profx.company_name}}></em></p>
+              <p><textarea id="about_work" name="about_work" rows="3" cols="50" value={{profx.about_work}}>{{profx.about_work}}</textarea><p>
+            </div>
+            <button id={{profx.id}} name=id value={{profx.id}} type="submit" formmethod="POST">
+                {% csrf_token %}
+                Save
+            </button>
+          </form>
+          {% endfor %}
+
+
+
+
+          
+
+
+
+
+
+
+          <div class="resume-item">
+            <h4>Senior graphic design specialist</h4>
+            <h5>2019 - Present</h5>
+            <p><em>Experion, New York, NY </em></p>
+            <p>
+            <ul>
+              <li>Lead in the design, development, and implementation of the graphic, layout, and production communication materials</li>
+              <li>Delegate tasks to the 7 members of the design team and provide counsel on all aspects of the project. </li>
+              <li>Supervise the assessment of all graphic materials in order to ensure quality and accuracy of the design</li>
+              <li>Oversee the efficient use of production project budgets ranging from $2,000 - $25,000</li>
+            </ul>
+            </p>
+          </div>
+          
+
+          <div id='TextBoxesGroupprof'>
+              <h3>Add</h3> 
+              <input type='button' value='Add Button' id='addButtonprof'>
+              <input type='button' value='Remove Button' id='removeButtonprof'>
+              <input type='button' value='Get TextBox Value' id='getButtonValueprof'>
+            </div>
+  
+            <script type="text/javascript">
+  
+              $(document).ready(function(){
+            
+                  var counter = 2;
+                  $("#addButtonprof").click(function () {
+            
+                if(counter>10){
+                          alert("Only 10 textboxes allow");
+                          return false;
+                }
+                
+                var newTextBoxDiv = $(document.createElement('div'))
+                    .attr("id", 'TextBoxDiv' + counter);
+            
+                
+                newTextBoxDiv.after().html(
+                  '<label>Designation : </label><br>' +
+                '<input type="text" name="designation' + counter +
+                '" id="designation' + counter + '" value="" ><br>'+
+                
+                '<label>Year : </label><br>' +
+                '<input type="text" name="year_of_work' + counter +
+                '" id="year_of_work' + counter + '" value="" ><br>'+
+                
+                '<label>Company Name : </label><br>' +
+                '<input type="text" name="company_name' + counter +
+                '" id="company_name' + counter + '" value="" ><br>'+
+  
+                '<label>About Work : </label><br>' +
+                '<textarea rows="3" cols="50" name="about_work' + counter +
+                '" id="about_work' + counter + '" value="" ></textarea><br>'
+  
+                );
+                newTextBoxDiv.appendTo("#TextBoxesGroupprof");
+            
+                counter++;
+                  });
+            
+                  $("#removeButtonprof").click(function () {
+                if(counter==1){
+                        alert("No more textbox to remove");
+                        return false;
+                    }
+            
+                counter--;
+            
+                      $("#TextBoxDiv" + counter).remove();
+            
+                  });
+            
+                $("#getButtonValueprof").click(function () {
+            
+                var msg = [];
+                for(i=1; i<counter; i++){
+                  msg[i]=([$('#designation' + (i)).val(), $('#year_of_work' + (i)).val(), $('#company_name' + (i)).val(), $('#about_work' + (i)).val()])
+                }
+            
+            
+                var payload = JSON.stringify({data : msg});
+                $.ajax({
+                url : "/edit_info/update_profession/",
+                type: "POST",
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                data : {'payload': payload},
+                dataType : "application/json",}).done(function(response) {
+                  console.log(response.id + " " + response.name);
+                }).fail(function (error) {
+                    console.log(error);
+                });
+                alert("Saved")
+                location.replace("#resume")
+                location.reload()
+                
+                console.info(msg);
+               
+                  });
+                });
+              </script>
+  
+
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End Resume Section -->
+
+  <!-- ======= Services Section ======= -->
+  <section id="services" class="services">
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Services</h2>
+        <p>My Services</p>
+      </div>
+
+      <div class="row">
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
+              <div class="icon-box">
+                  <div class="icon"><i class="bx bxl-dribbble"></i></div>
+                  <h4><a href="">Lorem Ipsum</a></h4>
+                  <p>Voluptatum deleniti atque corrupti quos dolores dnjvjkdnvkjdnvkjd vbkdjfnvjkdfnvkjdnvd vnvjkdnvkjdfv dvkdnvkjdnvkjdnvet quas molestias excepturi</p>
+                </div>
+          </div>
+  
+          
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-file"></i></div>
+              <h4><a href="">Sed ut perspiciatis</a></h4>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+            </div>
+          </div>
+  
+          <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-tachometer"></i></div>
+              <h4><a href="">Magni Dolores</a></h4>
+              <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+            </div>
+          </div>
+  
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+          <div class="icon-box">
+            <div class="icon"><i class="bx bx-world"></i></div>
+            <h4><a href="">Nemo Enim</a></h4>
+            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+          <div class="icon-box">
+            <div class="icon"><i class="bx bx-slideshow"></i></div>
+            <h4><a href="">Dele cardo</a></h4>
+            <p>Quis consequatur saepe eligendi voluptatem consequatur dolor consequuntur</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4">
+          <div class="icon-box">
+            <div class="icon"><i class="bx bx-arch"></i></div>
+            <h4><a href="">Divera don</a></h4>
+            <p>Modi nostrum vel laborum. Porro fugit error sit minus sapiente sit aspernatur</p>
+          </div>
+        </div>
+
+
+  
+
+
+
+      </div>
+
+    </div>
+  </section><!-- End Services Section -->
+
+  <!-- ======= Portfolio Section ======= -->
+  <section id="portfolio" class="portfolio">
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Portfolio</h2>
+        <p>My Works</p>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12 d-flex justify-content-center">
+          <ul id="portfolio-flters">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-app">App</li>
+            <li data-filter=".filter-card">Card</li>
+            <li data-filter=".filter-web">Web</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row portfolio-container">
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-1.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>App 1</h4>
+              <p>App</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-1.jpg'%}" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-2.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>Web 3</h4>
+              <p>Web</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-2.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Web 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-3.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>App 2</h4>
+              <p>App</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-3.jpg'%}" data-gall="portfolioGallery" class="venobox" title="App 2"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-4.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>Card 2</h4>
+              <p>Card</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-4.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Card 2"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-5.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>Web 2</h4>
+              <p>Web</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-5.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Web 2"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-6.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>App 3</h4>
+              <p>App</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-6.jpg'%}" data-gall="portfolioGallery" class="venobox" title="App 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-7.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>Card 1</h4>
+              <p>Card</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-7.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Card 1"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-8.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>Card 3</h4>
+              <p>Card</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-8.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Card 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
+          <div class="portfolio-wrap">
+            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-9.jpg'%}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4>Web 3</h4>
+              <p>Web</p>
+              <div class="portfolio-links">
+                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-9.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Web 3"><i class="bx bx-plus"></i></a>
+                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section><!-- End Portfolio Section -->
+
+  <!-- ======= Contact Section ======= -->
+  <section id="contact" class="contact">
+    <div class="container">
+
+      <div class="section-title">
+        <h2>Contact</h2>
+        <p>Contact Me</p>
+      </div>
+
+      <div class="row mt-2">
+
+        <div class="col-md-6 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-map"></i>
+            <h3>My Address</h3>
+            <p>A108 Adam Street, New York, NY 535022</p>
+          </div>
+        </div>
+
+        <div class="col-md-6 mt-4 mt-md-0 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-share-alt"></i>
+            <h3>Social Profiles</h3>
+            <div class="social-links">
+              <a href="#" class="twitter"><i class="icofont-twitter"></i></a>
+              <a href="#" class="facebook"><i class="icofont-facebook"></i></a>
+              <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
+              <a href="#" class="google-plus"><i class="icofont-skype"></i></a>
+              <a href="#" class="linkedin"><i class="icofont-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mt-4 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-envelope"></i>
+            <h3>Email Me</h3>
+            <p>contact@example.com</p>
+          </div>
+        </div>
+        <div class="col-md-6 mt-4 d-flex align-items-stretch">
+          <div class="info-box">
+            <i class="bx bx-phone-call"></i>
+            <h3>Call Me</h3>
+            <p>+1 5589 55488 55</p>
+          </div>
+        </div>
+      </div>
+
+      <form action="{% static 'ProfilePage/forms/contact.php'%}" method="post" role="form" class="php-email-form mt-4">
+        <div class="form-row">
+          <div class="col-md-6 form-group">
+            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+            <div class="validate"></div>
+          </div>
+          <div class="col-md-6 form-group">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+            <div class="validate"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+          <div class="validate"></div>
+        </div>
+        <div class="form-group">
+          <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+          <div class="validate"></div>
+        </div>
+        <div class="mb-3">
+          <div class="loading">Loading</div>
+          <div class="error-message"></div>
+          <div class="sent-message">Your message has been sent. Thank you!</div>
+        </div>
+        <div class="text-center"><button type="submit">Send Message</button></div>
+      </form>
+
+    </div>
+  </section><!-- End Contact Section -->
+
+  <div class="credits">
+    <!-- All the links in the footer should remain intact. -->
+    <!-- You can delete the links only if you purchased the pro version. -->
+    <!-- Licensing information: https://bootstrapmade.com/license/ -->
+    <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/personal-free-resume-bootstrap-template/ -->
+    Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+  </div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'ProfilePage/assets/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/jquery.easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/waypoints/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/counterup/counterup.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/owl.carousel/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'ProfilePage/assets/vendor/venobox/venobox.min.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'ProfilePage/assets/js/main.js' %}"></script>
+
+</body>
+
+</html>
