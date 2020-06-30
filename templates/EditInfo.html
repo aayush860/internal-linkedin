@@ -44,117 +44,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 
 
-  <form method="post" action="/search/" class="autocomplete-me">
-    <input type="text" id="id_q" name="q">
-    <input type="submit" value="Search!">
-    <a href="/logout">Logout</a>
-      </form>
-
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-  <script type="text/javascript">
-    // In a perfect world, this would be its own library file that got included
-    // on the page and only the ``$(document).ready(...)`` below would be present.
-    // But this is an example.
-    var Autocomplete = function(options) {
-      this.form_selector = options.form_selector
-      this.url = options.url || '/search/'
-      this.delay = parseInt(options.delay || 300)
-      this.minimum_length = parseInt(options.minimum_length || 3)
-      this.form_elem = null
-      this.query_box = null
-    }
-
-    Autocomplete.prototype.setup = function() {
-      var self = this
-
-      this.form_elem = $(this.form_selector)
-      this.query_box = this.form_elem.find('input[name=q]')
-
-      // Watch the input box.
-      this.query_box.on('keyup', function() {
-        var query = self.query_box.val()
-
-        if(query.length < self.minimum_length) {
-          return false
-        }
-
-        self.fetch(query)
-      })
-
-      // On selecting a result, populate the search field.
-      this.form_elem.on('click', '.ac-result', function(ev) {
-        self.query_box.val($(this).text())
-        location.replace('/profile/'+$(this).val())
-        $('.ac-result').remove()
-        return false
-      })
-    }
-
-    Autocomplete.prototype.fetch = function(query) {
-      var self = this
-
-      $.ajax({
-        url: this.url
-      , data: {
-          'q': query
-        }
-      , success: function(data) {
-          self.show_results(data)
-        }
-      })
-    }
-
-    Autocomplete.prototype.show_results = function(data) {
-      // Remove any existing results.
-      $('.ac-results').remove()
-
-      var results = data.results || []
-      var username = data.username || []
-      var results_wrapper = $('<div class="ac-results"></div>')
-      var results_wrapper2 = $('<div class="ac-results"></div>')
-      var base_elem = $('<div class="result-wrapper"><a href="#" class="ac-result"></a></div>')
-
-      if(results.length > 0) {
-        for(var res_offset in results) {
-          var elem = base_elem.clone()
-          // Don't use .html(...) here, as you open yourself to XSS.
-          // Really, you should use some form of templating.
-          //elem.find('.ac-result').data('name',results[res_offset])
-          elem.find('.ac-result').text(results[res_offset])
-          elem.find('.ac-result').val(username[res_offset])
-          results_wrapper.append(elem)
-        }
-      }
-      else {
-        var elem = base_elem.clone()
-        elem.text("No results found.")
-        results_wrapper.append(elem)
-      }
-
-      this.query_box.after(results_wrapper)
-    }
-
-    $(document).ready(function() {
-      window.autocomplete = new Autocomplete({
-        form_selector: '.autocomplete-me'
-      })
-      window.autocomplete.setup()
-    })
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!-- ======= Header ======= -->
   <header id="header" class="header-tops">
@@ -162,7 +51,7 @@
   
     <div class="container">
       {% if user.is_authenticated %}
-      <h1>{{login_det.first_name}}</h1>
+      <h1>{{login_det.first_name}} {{login_det.last_name}}</h1>
       {% else %}
       <h1>Aayush Bhargava</h1>
       {% endif %}
@@ -210,6 +99,7 @@
           <li><a href="#resume" class="resume">Resume</a></li>
           <li><a href="#services" class="services">Services</a></li>
           <li><a href="#contact">Contact</a></li>
+          <li><a href="/signin/">I am done Editing</a></li>
         </ul>
       </nav><!-- .nav-menu -->
 
@@ -239,7 +129,11 @@
 
       <div class="row">
         <div class="col-lg-4" data-aos="fade-right">
-          <img src="{% static 'ProfilePage/assets/img/me.jpg' %}" class="img-fluid" alt="">
+          <img src="{{ about_det.Image.url }}" class="img-fluid" alt="">
+          <form action="upload_image/" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" id="filename" name="filename" accept=".png, .jpg, .jpeg" ><input type="submit">
+          </form>
         </div>
         <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
           <form action="update_about/">
@@ -304,9 +198,9 @@
 
           <div id='TextBoxesGroup'>
             <h3>Add</h3> 
-            <input type='button' value='Add Button' id='addButton'>
-            <input type='button' value='Remove Button' id='removeButton'>
-            <input type='button' value='Get TextBox Value' id='getButtonValue'>
+            <input type='button' value='Add Skill' id='addButton'>
+            <input type='button' value='Remove Skill' id='removeButton'>
+            <input type='button' value='Save Skills' id='getButtonValue'>
           </div>
 
         </div>
@@ -413,9 +307,9 @@
 
       <div id='TextBoxesGroupint'>
         <h3>Add</h3> 
-        <input type='button' value='Add Button' id='addButtonint'>
-        <input type='button' value='Remove Button' id='removeButtonint'>
-        <input type='button' value='Get TextBox Value' id='getButtonValueint'>
+        <input type='button' value='Add Hobby' id='addButtonint'>
+        <input type='button' value='Remove Hobby' id='removeButtonint'>
+        <input type='button' value='Save Hobbies' id='getButtonValueint'>
       </div>
 
 
@@ -522,19 +416,11 @@
           </form>
           {% endfor %}
 
-          <div class="resume-item">
-            <h4>Bachelor of Fine Arts &amp; Graphic Design</h4>
-            <h5>2010 - 2014</h5>
-            <p><em>Rochester Institute of Technology, Rochester, NY</em></p>
-            <p>Quia nobis sequi est occaecati aut. Repudiandae et iusto quae reiciendis et quis Eius vel ratione eius unde vitae rerum voluptates asperiores voluptatem Earum molestiae consequatur neque etlon sader mart dila</p>
-          </div>
-
-
           <div id='TextBoxesGroupeduc'>
             <h3>Add</h3> 
-            <input type='button' value='Add Button' id='addButtoneduc'>
-            <input type='button' value='Remove Button' id='removeButtoneduc'>
-            <input type='button' value='Get TextBox Value' id='getButtonValueeduc'>
+            <input type='button' value='Add Education' id='addButtoneduc'>
+            <input type='button' value='Remove Education' id='removeButtoneduc'>
+            <input type='button' value='Save Education' id='getButtonValueeduc'>
           </div>
 
           <script type="text/javascript">
@@ -637,37 +523,13 @@
             </button>
           </form>
           {% endfor %}
-
-
-
-
-          
-
-
-
-
-
-
-          <div class="resume-item">
-            <h4>Senior graphic design specialist</h4>
-            <h5>2019 - Present</h5>
-            <p><em>Experion, New York, NY </em></p>
-            <p>
-            <ul>
-              <li>Lead in the design, development, and implementation of the graphic, layout, and production communication materials</li>
-              <li>Delegate tasks to the 7 members of the design team and provide counsel on all aspects of the project. </li>
-              <li>Supervise the assessment of all graphic materials in order to ensure quality and accuracy of the design</li>
-              <li>Oversee the efficient use of production project budgets ranging from $2,000 - $25,000</li>
-            </ul>
-            </p>
-          </div>
           
 
           <div id='TextBoxesGroupprof'>
               <h3>Add</h3> 
-              <input type='button' value='Add Button' id='addButtonprof'>
-              <input type='button' value='Remove Button' id='removeButtonprof'>
-              <input type='button' value='Get TextBox Value' id='getButtonValueprof'>
+              <input type='button' value='Add Profession' id='addButtonprof'>
+              <input type='button' value='Remove Profession' id='removeButtonprof'>
+              <input type='button' value='Save Profession' id='getButtonValueprof'>
             </div>
   
             <script type="text/javascript">
@@ -829,158 +691,6 @@
     </div>
   </section><!-- End Services Section -->
 
-  <!-- ======= Portfolio Section ======= -->
-  <section id="portfolio" class="portfolio">
-    <div class="container">
-
-      <div class="section-title">
-        <h2>Portfolio</h2>
-        <p>My Works</p>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-12 d-flex justify-content-center">
-          <ul id="portfolio-flters">
-            <li data-filter="*" class="filter-active">All</li>
-            <li data-filter=".filter-app">App</li>
-            <li data-filter=".filter-card">Card</li>
-            <li data-filter=".filter-web">Web</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="row portfolio-container">
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-1.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>App 1</h4>
-              <p>App</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-1.jpg'%}" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-2.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Web 3</h4>
-              <p>Web</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-2.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Web 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-3.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>App 2</h4>
-              <p>App</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-3.jpg'%}" data-gall="portfolioGallery" class="venobox" title="App 2"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-4.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 2</h4>
-              <p>Card</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-4.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Card 2"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-5.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Web 2</h4>
-              <p>Web</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-5.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Web 2"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-6.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>App 3</h4>
-              <p>App</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-6.jpg'%}" data-gall="portfolioGallery" class="venobox" title="App 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-7.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 1</h4>
-              <p>Card</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-7.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Card 1"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-8.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Card 3</h4>
-              <p>Card</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-8.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Card 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-          <div class="portfolio-wrap">
-            <img src="{% static 'ProfilePage/assets/img/portfolio/portfolio-9.jpg'%}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4>Web 3</h4>
-              <p>Web</p>
-              <div class="portfolio-links">
-                <a href="{% static 'ProfilePage/assets/img/portfolio/portfolio-9.jpg'%}" data-gall="portfolioGallery" class="venobox" title="Web 3"><i class="bx bx-plus"></i></a>
-                <a href="portfolio-details.html" data-gall="portfolioDetailsGallery" data-vbtype="iframe" class="venobox" title="Portfolio Details"><i class="bx bx-link"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section><!-- End Portfolio Section -->
 
   <!-- ======= Contact Section ======= -->
   <section id="contact" class="contact">
@@ -997,7 +707,13 @@
           <div class="info-box">
             <i class="bx bx-map"></i>
             <h3>My Address</h3>
-            <p>A108 Adam Street, New York, NY 535022</p>
+            <p><form action="update_address/">
+              <textarea id="Address" name="Address" rows="2" cols="50" value=>{{about_det.Address}}</textarea>
+              <button type="submit", button type="submit", formmethod="POST">
+                {% csrf_token %}
+                Save
+              </button>
+            </form></p>
           </div>
         </div>
 
@@ -1006,11 +722,10 @@
             <i class="bx bx-share-alt"></i>
             <h3>Social Profiles</h3>
             <div class="social-links">
-              <a href="#" class="twitter"><i class="icofont-twitter"></i></a>
-              <a href="#" class="facebook"><i class="icofont-facebook"></i></a>
-              <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
-              <a href="#" class="google-plus"><i class="icofont-skype"></i></a>
-              <a href="#" class="linkedin"><i class="icofont-linkedin"></i></a>
+              <a href="{{social.github}}" target="_blank" class="twitter"><i class="icofont-github"></i></a>
+              <a href="{{social.facebook}}" target="_blank" class="facebook"><i class="icofont-facebook"></i></a>
+              <a href="{{social.instagram}}" target="_blank" class="instagram"><i class="icofont-instagram"></i></a>
+              <a href="{{social.linkedin}}" target="_blank" class="linkedin"><i class="icofont-linkedin"></i></a>
             </div>
           </div>
         </div>
@@ -1019,14 +734,14 @@
           <div class="info-box">
             <i class="bx bx-envelope"></i>
             <h3>Email Me</h3>
-            <p>contact@example.com</p>
+            <p>{{ login_det.email }}</p>
           </div>
         </div>
         <div class="col-md-6 mt-4 d-flex align-items-stretch">
           <div class="info-box">
             <i class="bx bx-phone-call"></i>
             <h3>Call Me</h3>
-            <p>+1 5589 55488 55</p>
+            <p>{{ about_det.MobileNumber }}</p>
           </div>
         </div>
       </div>

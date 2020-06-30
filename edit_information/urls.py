@@ -21,12 +21,14 @@ from . import views
 urlpatterns = [
     path('edit_info/', views.edit_info),
     path('edit_info/update_skills/', views.update_skills),
+    path('edit_info/upload_image/', views.upload_image),
     path('edit_info/update_education/', views.update_education),
     path('edit_info/update_profession/', views.update_profession),
     path('edit_info/update_social/', views.update_social),
     path('edit_info/update_interest/', views.update_interest),
     path('edit_info/update_about/', views.update_about),
-    path('edit_info/update_home/', views.update_home)
-]
+    path('edit_info/update_home/', views.update_home),
+    path('edit_info/update_address/', views.update_address)
 
+]
 #path('ajax_calls/search/', views.autocompleteModel),

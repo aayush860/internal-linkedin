@@ -3,6 +3,11 @@ from django.contrib.auth.models import User,auth
 from profile_page.models import profile_details,educations,skills,about_details,professional_experience,social_profiles,interests
 from django.http import HttpResponse
 import json
+import os
+from django.conf import settings
+from django.core.files.storage import default_storage
+
+
 # Create your views here.
 
 def edit_info(request):
@@ -125,3 +130,24 @@ def update_social(request):
         key = profile_details.objects.get(username=request.user.username)
         details = social_profiles.objects.filter(username=key).update(github=github, facebook=facebook, instagram=instagram, linkedin=linkedin)
     return redirect('/edit_info/')
+
+def upload_image(request):
+    if request.method=='POST' and request.user.is_authenticated:        
+        filename = request.FILES['filename']
+        namee=str(request.user.username)+'.jpg'
+        check = os.path.join(settings.MEDIA_ROOT, namee)
+        if os.path.exists(check):
+            os.remove(check)
+        file_name = default_storage.save(namee, filename)
+        print ('^^^^^^^^^^^^^^^^^^^^^^^^^',filename)
+        key = profile_details.objects.get(username=request.user.username)
+        details = about_details.objects.filter(username=key).update(Image=namee)
+    return redirect('/edit_info/#about')
+
+def update_address(request):
+    if request.method=='POST' and request.user.is_authenticated: 
+        dataa = request.POST['Address']
+        key = profile_details.objects.get(username=request.user.username)
+        details = about_details.objects.filter(username=key).update(Address=dataa)
+        #details=profile_details.objects.filter(username=key).update(About_me_About=dataa)
+    return redirect('/edit_info/#contact')

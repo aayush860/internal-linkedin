@@ -20,6 +20,8 @@ class about_details(models.Model):
     MobileNumber = models.CharField(max_length=10)
     City = models.CharField(max_length=32)
     Website = models.TextField()
+    Address = models.TextField()
+    Image = models.ImageField(upload_to='media/')
 
 class educations(models.Model):
     username = models.ForeignKey(profile_details, on_delete=models.CASCADE)
@@ -27,13 +29,6 @@ class educations(models.Model):
     institute_name = models.TextField()
     year_of_education = models.TextField()
     about_education = models.TextField()
-
-
-class projects(models.Model):
-    username = models.ForeignKey(profile_details, on_delete=models.CASCADE)
-    project_name = models.CharField(max_length=56)
-    about_project = models.TextField()
-    project_link = models.URLField(max_length=300)
 
 
 class skills(models.Model):
@@ -61,3 +56,25 @@ class social_profiles(models.Model):
     facebook = models.TextField()
     instagram = models.TextField()
     linkedin = models.TextField()
+
+
+class achivement(models.Model):
+    username = models.ForeignKey(profile_details, on_delete=models.CASCADE)
+    name_of_achivement = models.CharField(max_length=56)
+    year = models.CharField(max_length=32)
+    about_achivement = models.TextField()
+
+
+class certificate(models.Model):
+    username = models.ForeignKey(profile_details, on_delete=models.CASCADE)
+    name_of_certificate = models.CharField(max_length=56)
+    year_achived = models.CharField(max_length=32)
+    about_certificate = models.TextField()
+    certificate_link = models.TextField()
+
+class projects(models.Model):
+    username = models.ForeignKey(profile_details, on_delete=models.CASCADE)
+    name_of_project = models.CharField(max_length=56)
+    year_made = models.CharField(max_length=32)
+    about_project = models.TextField()
+    project_link = models.TextField()
