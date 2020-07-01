@@ -53,8 +53,7 @@
 
   
   <form method="post" action="/search/" class="autocomplete-me">
-    <input type="text" id="id_q" name="q">
-    <input type="submit" value="Search!">
+    <input type="text" id="id_q" name="q" placeholder="Search...">
     &nbsp;&nbsp;<a href="/edit_info">Edit_Info</a>&nbsp;&nbsp;
     <a href="/signin">My Page</a>
     <a style="float: right;" href="/logout">Logout</a>
@@ -71,7 +70,7 @@
       this.form_selector = options.form_selector
       this.url = options.url || '/search/'
       this.delay = parseInt(options.delay || 300)
-      this.minimum_length = parseInt(options.minimum_length || 3)
+      this.minimum_length = parseInt(options.minimum_length || 2)
       this.form_elem = null
       this.query_box = null
     }
