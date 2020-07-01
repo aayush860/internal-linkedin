@@ -41,9 +41,8 @@ def profile(request,username):
         educationn = educations.objects.all().filter(username=dataa)
         professional = professional_experience.objects.all().filter(username=dataa)
         social = social_profiles.objects.all().filter(username=dataa)
-        interest = interests.objects.all().filter(username=dataa)
-        size=len(skilx)//2
-        return render(request, 'profilepage.html', {'size':size  ,'interest':interest,'social':social[0] ,'login_det':login_det, 'dataa':dataa, 'skilx':skilx, 'about_det':about_det[0], 'educationn':educationn, 'professional':professional})
+        interest = interests.objects.all().filter(username=dataa) 
+        return render(request, 'profilepage.html', {'interest':interest,'social':social[0] ,'login_det':login_det, 'dataa':dataa, 'skilx':skilx, 'about_det':about_det[0], 'educationn':educationn, 'professional':professional})
     else:
         return redirect('/signin/')
 
@@ -51,4 +50,7 @@ def profile(request,username):
 
 def logout(request):
     auth.logout(request)
+    return redirect('/signin/')
+
+def home(request):
     return redirect('/signin/')

@@ -20,6 +20,7 @@ from django.conf.urls import url
 
 
 urlpatterns = [
+    path('',views.home),
     path('profile/<username>/', views.profile),
     path('logout/', views.logout),
     url(r'^search/', views.autocompleteModel),
