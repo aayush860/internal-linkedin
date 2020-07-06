@@ -46,6 +46,19 @@ def profile(request,username):
     else:
         return redirect('/signin/')
 
+def display(request,username):
+    try:
+        login_det = User.objects.get(username=username)
+        dataa = profile_details.objects.get(username=username)
+        skilx = skills.objects.all().filter(username=dataa)
+        about_det = about_details.objects.all().filter(username=dataa)
+        educationn = educations.objects.all().filter(username=dataa)
+        professional = professional_experience.objects.all().filter(username=dataa)
+        social = social_profiles.objects.all().filter(username=dataa)
+        interest = interests.objects.all().filter(username=dataa) 
+        return render(request, 'profile_view.html', {'interest':interest,'social':social[0] ,'login_det':login_det, 'dataa':dataa, 'skilx':skilx, 'about_det':about_det[0], 'educationn':educationn, 'professional':professional})
+    except:
+        return render(request,'not_found.html')
 
 
 def logout(request):

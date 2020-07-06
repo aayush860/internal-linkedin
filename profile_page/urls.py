@@ -22,6 +22,7 @@ from django.conf.urls import url
 urlpatterns = [
     path('',views.home),
     path('profile/<username>/', views.profile),
+    path('display/<username>/', views.display),
     path('logout/', views.logout),
     url(r'^search/', views.autocompleteModel),
 ]
